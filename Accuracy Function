@@ -1,0 +1,41 @@
+import random
+PlayerHit = 11
+PlayerCrit = 19
+MobHit = 11
+MobCrit = 19
+PlayerAttackResult = "Miss"
+MobAttackResult = "Miss"
+
+def PlayerAccuracyCheck(AttackResult):
+  Roll = 0
+  Roll = random.randint(1,20)
+  print ("Player Rolled: ",Roll)
+  
+  if Roll >= PlayerCrit:
+      AttackResult = "Crits"
+  elif Roll >= PlayerHit:
+      AttackResult = "Hits"
+  else:
+      AttackResult = "Misses"
+  print("The Player",AttackResult+"!")
+  return AttackResult
+
+def MobAccuracyCheck(AttackResult):
+  Roll = 0
+  Roll = random.randint(1,20)
+  print ("Monster Rolled: ",Roll)
+  
+  if Roll >= PlayerCrit:
+      AttackResult = "Crits"
+  elif Roll >= PlayerHit:
+      AttackResult = "Hits"
+  else:
+      AttackResult = "Misses"
+  print("The Monster",AttackResult+"!")
+  return AttackResult
+      
+
+PlayerAttackResult = PlayerAccuracyCheck(PlayerAttackResult)
+MobAttackResult = MobAccuracyCheck(MobAttackResult)
+
+print("Round summary: The Player",PlayerAttackResult," | The Monster",MobAttackResult)
