@@ -6,6 +6,51 @@ import math
 import random
 import time
 
+
+def Start():
+    global playerHP,playerMaxHP,playerDMG,playerCrit,playerCritDMG,playerAccuracy,heal,enter1,enter2,enter3,enter4,enter5,enter6,enter7,enter8,enter9,enter10,enter11,currentLocation
+    print ("")
+    print ("1. New Game")
+    print ("2. Continue")
+    print ("")
+    choice = 0
+    choice = validateNum(choice,1,2)
+    if choice == 1:
+        intro()
+    elif choice == 2:
+        Load(playerHP,playerMaxHP,playerDMG,playerCrit,playerCritDMG,playerAccuracy,heal,enter1,enter2,enter3,enter4,enter5,enter6,enter7,enter8,enter9,enter10,enter11,currentLocation)
+        Location(currentLocation)
+
+def Load(playerHP,playerMaxHP,playerDMG,playerCrit,playerCritDMG,playerAccuracy,heal,enter1,enter2,enter3,enter4,enter5,enter6,enter7,enter8,enter9,enter10,enter11,currentLocation):
+    with open("BreachSaved.txt", "r") as stats:
+        stats = stats.read().split(" ")
+        playerHP = stats[0]
+        playerMaxHP = stats[1]
+        playerDMG = stats[2]
+        playerCrit = stats[3]
+        playerCritDMG = stats[4]
+        playerAccuracy = stats[5]
+        heal = stats[6]
+        enter1 = stats[7]
+        enter2 = stats[8]
+        enter3 = stats[9]
+        enter4 = stats[10]
+        enter5 = stats[11]
+        enter6 = stats[12]
+        enter7 = stats[13]
+        enter8 = stats[14]
+        enter9 = stats[15]
+        enter10 = stats[16]
+        enter11 = stats[17]
+        currentLocation = stats[18]
+        return playerHP,playerMaxHP,playerDMG,playerCrit,playerCritDMG,playerAccuracy,heal,enter1,enter2,enter3,enter4,enter5,enter6,enter7,enter8,enter9,enter10,enter11,currentLocation
+
+
+
+
+
+
+
  #Introduction
 def intro():
     print ("It's been 2 hours since you were seperated from your team.  The cave you stand in is cold and dank, musty air fills your lungs.")
@@ -39,25 +84,34 @@ def intro():
     input("press enter to continue...")
     print ("What do you do?")
     print ("")
+    room1()
 
 #-------------------------------------------------------------------------------
  #Global Variables
-playerMax = 100
-playerHP = 80
-playerDMG = 5
-luck = [0,0,1,1,1,1,1,1.3,1.3]
+playerMaxHP = 100
+playerHP = 100
+playerDMG = 25
+playerAccuracy = 12
+playerCrit = 19
+playerCritDMG = 1.5
 fight = ""
-mobHP = 100
-mobDMG = 5
+MobCurrentHP = 75
+mobDMG = 40
+mobAccuracy = 10
+mobCrit = 19
+mobCritDMG = 1.5
+MobMaxHP = 75
 heal = 1
-East = False
-West = False
-North = False
-South = False
+AttackPreference1 = "Offensive"
+AttackPreference2 = "Offensive"
+currentLocation = 0
+#Defensive = 1
+#Offensive = 2
+#Oppertunistic = 3
 #=------------------------------------------------------------------------------
  #Room entered
 enter1 = 0
-enter2 = 1
+enter2 = 0
 enter3 = 0
 enter4 = 0
 enter5 = 0
@@ -89,14 +143,63 @@ def validateNum(value, min, max):
 
 
 #Combat System
-def Combat():
 
-    while playerHP > 0 or mobHP > 0:
+def EnemyAttackWeighting(Preference1,Preference2):
+    global MobCurrentHP
+    global MobMaxHP
+    if MobCurrentHP <= (MobMaxHP/2):
+        WeightingList = [1,2,3,Preference2,Preference2,Preference2]
+        AttackChoice = random.choice(WeightingList)
+        print(WeightingList)
+        return AttackChoice
+    else:
+        WeightingList = [1,2,3,Preference1,Preference1,Preference1]
+        AttackChoice = random.choice(WeightingList)
+        print(WeightingList)
+        return AttackChoice
+
+
+def PlayerAccuracyCheck(AttackResult):
+  global playerCrit, playerAccuracy
+  Roll = 0
+  Roll = random.randint(1,20)
+  print ("Player Rolled: ",Roll)
+
+  if Roll >= playerCrit:
+      AttackResult = "Crits"
+  elif Roll >= playerAccuracy:
+      AttackResult = "Hits"
+  else:
+      AttackResult = "Misses"
+  print("The Player",AttackResult+"!")
+  return AttackResult
+
+def MobAccuracyCheck(AttackResult):
+  global mobCrit, mobAccuracy
+  Roll = 0
+  Roll = random.randint(1,20)
+  print ("Monster Rolled: ",Roll)
+
+  if Roll >= mobCrit:
+      AttackResult = "Crits"
+  elif Roll >= mobAccuracy:
+      AttackResult = "Hits"
+  else:
+      AttackResult = "Misses"
+  print("The Monster",AttackResult+"!")
+  return AttackResult
+
+def Combat():
+    global AttackPreference1, AttackPreference2
+    playerAttackResult = ""
+    mobAttackResult = ""
+
+    while playerHP > 0 or MobCurrentHP > 0:
         if playerHP <= 0:
             print ("You have died, rip in pip")
             break
 
-        elif mobHP <= 0:
+        elif MobCurrentHP <= 0:
             print ("You have slain the enemy")
             break
 
@@ -106,93 +209,133 @@ def Combat():
             print (" 1. Light Attack")
             print ("2. Medium Attack")
             print ("3. Heavy Attack")
+            print (playerHP)
+            print (MobCurrentHP)
             print ("")
             fight = 1
             fight = validateNum(fight,1,3)
-            mobAttack = random.randint(1,3)
+            playerAttackResult = PlayerAccuracyCheck(playerAttackResult)
+            mobAttack = EnemyAttackWeighting(AttackPreference1, AttackPreference2)
+            mobAttackResult = MobAccuracyCheck(mobAttackResult)
 
+        if playerAttackResult == "Hits" and mobAttackResult == "Hits":
             if fight == 1 and mobAttack == 1:
-                ComDraw()
+                ComDraw(playerAttackResult, mobAttackResult)
 
             elif fight == 1 and mobAttack == 2:
-                ComLose()
+                ComLose(playerAttackResult, mobAttackResult)
 
             elif fight == 1 and mobAttack == 3:
-                ComWin()
+                ComWin(playerAttackResult, mobAttackResult)
 
             elif fight ==2 and mobAttack == 1:
-                ComWin()
+                ComWin(playerAttackResult, mobAttackResult)
 
             elif fight ==2 and mobAttack == 2:
-                ComDraw()
+                ComDraw(playerAttackResult, mobAttackResult)
 
             elif fight ==2 and mobAttack == 3:
-                ComLose()
+                ComLose(playerAttackResult, mobAttackResult)
 
             elif fight ==3 and mobAttack == 1:
-                ComLose()
+                ComLose(playerAttackResult, mobAttackResult)
 
             elif fight == 3 and mobAttack == 2:
-                ComWin()
+                ComWin(playerAttackResult, mobAttackResult)
 
             elif fight == 3 and mobAttack == 3:
-                ComDraw()
+                ComDraw(playerAttackResult, mobAttackResult)
+
+        elif playerAttackResult =="Crits" and mobAttackResult == "Crits":
+
+            if fight == 1 and mobAttack == 1:
+                ComDraw(playerAttackResult, mobAttackResult)
+
+            elif fight == 1 and mobAttack == 2:
+                ComLose(playerAttackResult, mobAttackResult)
+
+            elif fight == 1 and mobAttack == 3:
+                ComWin(playerAttackResult, mobAttackResult)
+
+            elif fight ==2 and mobAttack == 1:
+                ComWin(playerAttackResult, mobAttackResult)
+
+            elif fight ==2 and mobAttack == 2:
+                ComDraw(playerAttackResult, mobAttackResult)
+
+            elif fight ==2 and mobAttack == 3:
+                ComLose(playerAttackResult, mobAttackResult)
+
+            elif fight ==3 and mobAttack == 1:
+                ComLose(playerAttackResult, mobAttackResult)
+
+            elif fight == 3 and mobAttack == 2:
+                ComWin(playerAttackResult, mobAttackResult)
+
+            elif fight == 3 and mobAttack == 3:
+                ComDraw(playerAttackResult, mobAttackResult)
+
+        elif playerAttackResult == "Misses" and mobAttackResult == "Misses":
+            print ("Both Miss")
+            continue
+
+        elif playerAttackResult == "Hits" and mobAttackResult == "Misses":
+            ComWin(playerAttackResult, mobAttackResult)
+
+        elif playerAttackResult == "Hits" and mobAttackResult == "Crits":
+            ComDraw(playerAttackResult, mobAttackResult)
+
+        elif playerAttackResult == "Misses" and mobAttackResult == "Hits":
+            ComLose(playerAttackResult, mobAttackResult)
+
+        elif playerAttackResult == "Crits" and mobAttackResult == "Hits":
+            ComDraw(playerAttackResult, mobAttackResult)
 
 
 
 
 
-def ComWin():
-    global mobHP, playerDMG
-    hit_chance = random.choice(luck)
-    mobHP = mobHP - (round(playerDMG * hit_chance))
-    print (hit_chance)
-    print (mobHP)
-    if hit_chance < 1:
-        print ("You missed!")
+
+
+def ComWin(playerAttackResult, mobAttackResult):
+    global MobCurrentHP, playerDMG, playerCritDMG
+    if playerAttackResult == "Crits":
+        MobCurrentHP = MobCurrentHP - (round(playerDMG * playerCritDMG))
+        print("You Critically Hit!")
     else:
-        print ("You smash")
-    return mobHP
+        MobCurrentHP = MobCurrentHP - (playerDMG)
+    return MobCurrentHP
 
-def ComLose():
-    global playerHP, mobDMG
-    hit_chance = random.choice(luck)
-    playerHP = playerHP - (round(mobDMG * hit_chance))
-    print (hit_chance)
-    print (playerHP)
-    if hit_chance < 1:
-        print ("The monster has missed! You take no damage.")
+def ComLose(playerAttackResult, mobAttackResult):
+    global playerHP, mobDMG, mobCritDMG
+    if mobAttackResult == "Crits":
+        playerHP = playerHP - (round(mobDMG * mobCritDMG))
+        print("The mob Critically Hit!")
     else:
-        print ("You've taken damage, your HP is ",playerHP)
+        playerHP = playerHP - mobDMG
     return playerHP
 
-def ComDraw():
-    global mobHP, mobDMG, playerDMG, playerHP
-    hit_chance = random.choice(luck)
-    mobHP = mobHP - (round(playerDMG * hit_chance))
-    print (hit_chance)
-    print (mobHP)
-    if hit_chance < 1:
-        print ("You have missed!")
+def ComDraw(playerAttackResult, mobAttackResult):
+    global MobCurrentHP, mobDMG, playerDMG, playerHP, playerCritDMG, mobCritDMG
+    if playerAttackResult == "Crits":
+        MobCurrentHP = MobCurrentHP - (round(playerDMG * playerCritDMG))
+        print("You Critically Hit!")
     else:
-        print ("You smash!")
-    hit_chance = random.choice(luck)
-    print (hit_chance)
-    print (playerHP)
-    playerHP = playerHP - (round(mobDMG * hit_chance))
-    if hit_chance < 1:
-        print ("The monster has missed! You take no damage.")
+        MobCurrentHP = MobCurrentHP - (playerDMG)
+
+    if mobAttackResult == "Crits":
+        playerHP = playerHP - (round(mobDMG * mobCritDMG))
+        print("The mob Critically Hit!")
     else:
-        print ("You've taken damage, your HP is ",playerHP)
-    return mobHP, playerHP
+        playerHP = playerHP - mobDMG
+    return MobCurrentHP, playerHP
 
 #-------------------------------------------------------------------------------
   #Rooms
 def room1():
-    global North, East, South, West
-    East = True
-    West = True
-    South = True
+    global currentLocation
+    currentLocation = 1
+    print (currentLocation)
     move = ""
     print ("Four large doors of gleaming black metal dominate the four corners of this small chamber.")
     print ("You recognise one of the doors as the entrance to the complex by its lack of green glow.")
@@ -200,14 +343,25 @@ def room1():
     print ("If there is an exit to this place it lies beyond these three active doors.")
     print ("")
     input("Press enter to continue...")
+    Options()
     print ("1. There is a Green door to the West")
     print ("2. There is a Green door to the South")
     print ("3. There is a Green door to the East")
-    move = input("Select a door to choose your path...")
-    move = validateWord(North,East,West,South,move)
+    print ("")
+    move = validateNum(move,1,3)
+    if move == 1:
+        room3()
+    elif move == 2:
+        room4()
+    elif move == 3:
+        room2()
+
 
 
 def room2():
+    global currentLocation
+    currentLocation = 2
+    print (currentLocation)
     global playerDMG
     global enter2
     if enter2 == 0:
@@ -220,15 +374,21 @@ def room2():
         print("chorus of thunks.  In the silence that follows, having determined the room wasn’t trying to kill you, you check the")
         print("compartments to find them all empty bar one in the corner which contains what is instantly recognisable as a pistol,")
         print("though it's not a make you recognise.")
+        print("")
 
         if playerDMG < 15:
             print("You take the pistol, the feel of an actual weapon in your hands already making you feel safer.  If you were to")
             print("encounter something now, maybe you could avoid dying an immediate death.")
+            print("")
             playerDMG = 15
 
         elif playerDMG >=15:
             print("You decide that your current weapon is better than this sorry abandoned pistol.  You leave it in its compartment and")
             print("continue on.")
+            print("")
+
+        Options()
+        print("")
 
 
         print("1. There is a Green door to the West ")
@@ -253,13 +413,15 @@ def room2():
         move = validateNum(move,1,2)
 
         if move == 1:
-            print("room1()")
+            print ("room1()")
         else:
             print("room6()")
 
 
 
 def room3():
+    global currentLocation
+    currentLocation = 3
     print("As the door slides open, it reveals a pitch black room.  There is a sound of something whirring and crackling")
     print("seemingly emanating from the back of the room, but you cannot identify the source as what little of the room")
     print("appears to be strewn with debris and machinery and obscures your view.")
@@ -274,16 +436,24 @@ def room3():
     print("")
     input("press enter to continue...")
     print("Should you swallow your fear and advance, or retreat for now? ")
+    print("")
 
-    choice = input("Advance or Retreat").lower()
+    print("1. Advance")
+    print("2. Retreat")
 
-    if choice == "advance":
-        Combat()
-    elif choice == "retreat":
-        print("Scared RUN")
+    choice = validateNum(choice,1,2)
+
+    if choice == 1:
+        if playerDMG > 10:
+            Combat()
+        else:
+            print("GAME OVER")
+            print("")
+    elif choice == 2:
+        print("You retreat...")
+        print("")
         room1()
-    else:
-        print("WRONG Input")
+
 
 #def room4():
 
@@ -301,10 +471,10 @@ def room3():
 
 #def room11():
 
-#----------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 
 def healthkit():
-    global playerHP, playerMax, heal, gainhealth
+    global playerHP, playerMaxHP, heal, gainhealth
     if heal > 0:
         print ("1. Yes")
         print ("2. No")
@@ -313,7 +483,7 @@ def healthkit():
         gainhealth = validateNum(gainhealth,1,2)
         print(gainhealth)
         if gainhealth == 1:
-            playerHP = playerMax
+            playerHP = playerMaxHP
             print("You have healed yourself")
             print (playerHP)
             heal = heal - 1
@@ -321,13 +491,101 @@ def healthkit():
             print("No health kit was used")
 
 
+def Options():
+    while True:
+        print ("What do you want to do?")
+        print ("")
+        print ("1. Move")
+        print ("2. Heal")
+        print ("3. Save Game")
+        print ("")
+        Option = 0
+        Option = validateNum(Option,1,3)
+        if Option == 1:
+            return
+        elif Option == 2:
+            healthkit()
+        elif Option == 3:
+            SaveGame(playerHP,playerMaxHP,playerDMG,playerCrit,playerCritDMG,playerAccuracy,heal,enter1,enter2,enter3,enter4,enter5,enter6,enter7,enter8,enter9,enter10,enter11,currentLocation)
+            print ("Game Saved")
 
-#---------------------------------------------------------------
 
 
+def SaveGame(playerHP,playerMaxHP,playerDMG,playerCrit,playerCritDMG,playerAccuracy,heal,enter1,enter2,enter3,enter4,enter5,enter6,enter7,enter8,enter9,enter10,enter11,currentLocation):
+    file = open("BreachSaved.txt", "w")
+    file.write(str(playerHP))
+    file.write(" ")
+    file.write(str(playerMaxHP))
+    file.write(str(" "))
+    file.write(str(playerDMG))
+    file.write(str(" "))
+    file.write(str(playerCrit))
+    file.write(str(" "))
+    file.write(str(playerCritDMG))
+    file.write(str(" "))
+    file.write(str(playerAccuracy))
+    file.write(str(" "))
+    file.write(str(heal))
+    file.write(str(" "))
+    file.write(str(enter1))
+    file.write(str(" "))
+    file.write(str(enter2))
+    file.write(str(" "))
+    file.write(str(enter3))
+    file.write(str(" "))
+    file.write(str(enter4))
+    file.write(str(" "))
+    file.write(str(enter5))
+    file.write(str(" "))
+    file.write(str(enter6))
+    file.write(str(" "))
+    file.write(str(enter7))
+    file.write(str(" "))
+    file.write(str(enter8))
+    file.write(str(" "))
+    file.write(str(enter9))
+    file.write(str(" "))
+    file.write(str(enter10))
+    file.write(str(" "))
+    file.write(str(enter11))
+    file.write(str(" "))
+    file.write(str(currentLocation))
+    file.write("\n")
+    file.close()
+
+
+
+def Location(currentLocation):
+    if currentLocation == 1:
+        room1()
+    elif currentLocation == 2:
+        room2()
+    elif currentLocation == 3:
+        room3()
+    elif currentLocation == 4:
+        room4()
+    elif currentLocation == 5:
+        room5()
+    elif currentLocation == 6:
+        room6()
+    elif currentLocation == 7:
+        room7()
+    elif currentLocation == 8:
+        room8
+    elif currentLocation == 9:
+        room9()
+    elif currentLocation == 10:
+        room10()
+    elif currentLocation == 11:
+        room11()
+
+
+
+
+Start()
 #intro()
 #healthkit()
 #Combat()
 #room1()
-room2()
+#room2()
 #room3()
