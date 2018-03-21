@@ -1,16 +1,27 @@
 import random
-AttackPreference = "Defensive"
+AttackPreference1 = "Defensive"
+AttackPreference2 = "Offensive"
+MobMaxHP = 100
+MobCurrentHP = 50
 AttackResult = ""
 #3 Attack Types: Defensive, Offensive, Opportunistic
 #Opportunistic Beats Offensive
 #Defensive Beats Opportunistic
 #Offensive Beats Defensive
 
-def EnemyAttackWeighting(Preference):
-    WeightingList = ["Defensive","Offensive","Opportunistic",Preference,Preference,Preference]
-    AttackChoice = random.choice(WeightingList)
-    return AttackChoice
+def EnemyAttackWeighting(Preference1,Preference2):
+    global MobCurrentHP
+    global MobMaxHP
+    if MobCurrentHP <= (MobMaxHP/2):
+        WeightingList = ["Defensive","Offensive","Opportunistic",Preference2,Preference2,Preference2]
+        AttackChoice = random.choice(WeightingList)
+        print(WeightingList)
+        return AttackChoice
+    else:
+        WeightingList = ["Defensive","Offensive","Opportunistic",Preference1,Preference1,Preference1]
+        AttackChoice = random.choice(WeightingList)
+        print(WeightingList)
+        return AttackChoice
 
-
-AttackResult = EnemyAttackWeighting(AttackPreference)
+AttackResult = EnemyAttackWeighting(AttackPreference1,AttackPreference2)
 print (AttackResult)
