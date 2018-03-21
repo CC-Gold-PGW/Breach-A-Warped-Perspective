@@ -8,20 +8,24 @@ import time
 
 
 def Start():
+    #Shows title screen and provides options for starting a new game or loading an existing one.
     global playerHP,playerMaxHP,playerDMG,playerCrit,playerCritDMG,playerAccuracy,heal,enter1,enter2,enter3,enter4,enter5,enter6,enter7,enter8,enter9,enter10,enter11,currentLocation
     print ("")
     print ("1. New Game")
     print ("2. Continue")
     print ("")
     choice = 0
+    #Using external validator function for all choices
     choice = validateNum(choice,1,2)
     if choice == 1:
         intro()
     elif choice == 2:
         Load(playerHP,playerMaxHP,playerDMG,playerCrit,playerCritDMG,playerAccuracy,heal,enter1,enter2,enter3,enter4,enter5,enter6,enter7,enter8,enter9,enter10,enter11,currentLocation)
-        Location(currentLocation)
+        #Runs external function for sending the player to the correct room
+        Location = Location(currentLocation)
 
 def Load(playerHP,playerMaxHP,playerDMG,playerCrit,playerCritDMG,playerAccuracy,heal,enter1,enter2,enter3,enter4,enter5,enter6,enter7,enter8,enter9,enter10,enter11,currentLocation):
+    #Loads all revelant global variables from an external file and moves player to the correct room
     with open("BreachSaved.txt", "r") as stats:
         stats = stats.read().split(" ")
         playerHP = stats[0]
@@ -45,14 +49,8 @@ def Load(playerHP,playerMaxHP,playerDMG,playerCrit,playerCritDMG,playerAccuracy,
         currentLocation = stats[18]
         return playerHP,playerMaxHP,playerDMG,playerCrit,playerCritDMG,playerAccuracy,heal,enter1,enter2,enter3,enter4,enter5,enter6,enter7,enter8,enter9,enter10,enter11,currentLocation
 
-
-
-
-
-
-
- #Introduction
 def intro():
+    #Displays the game's intro text
     print ("It's been 2 hours since you were seperated from your team.  The cave you stand in is cold and dank, musty air fills your lungs.")
     print ("")
     input("press enter to continue...")
@@ -104,10 +102,8 @@ MobMaxHP = 75
 heal = 1
 AttackPreference1 = "Offensive"
 AttackPreference2 = "Offensive"
+#3 types of attacks.  Defensive beats Opportunistic, Opportunistic beats Offensive, Offensive beats Defensive
 currentLocation = 0
-#Defensive = 1
-#Offensive = 2
-#Oppertunistic = 3
 #=------------------------------------------------------------------------------
  #Room entered
 enter1 = 0
@@ -195,6 +191,7 @@ def Combat():
     mobAttackResult = ""
 
     while playerHP > 0 or MobCurrentHP > 0:
+        #Loops until either player or enemy are dead
         if playerHP <= 0:
             print ("You have died, rip in pip")
             break
@@ -204,21 +201,24 @@ def Combat():
             break
 
         else:
+            #Rock/Paper/Scissors combat system with additional roll-to-hit subsystem
             time.sleep(1)
             print ("")
-            print (" 1. Light Attack")
-            print ("2. Medium Attack")
-            print ("3. Heavy Attack")
-            print (playerHP)
-            print (MobCurrentHP)
+            print (" 1. Make a Defensive Attack")
+            print ("2. Make a Offensive Attack")
+            print ("3. Make an Opportunistic Attack")
+            print ("You have",playerHP,"HP remaining")
+            print ("The enemy has",MobCurrentHP,"HP Remaining")
             print ("")
             fight = 1
+            #Using external validator for all player choices
             fight = validateNum(fight,1,3)
             playerAttackResult = PlayerAccuracyCheck(playerAttackResult)
             mobAttack = EnemyAttackWeighting(AttackPreference1, AttackPreference2)
             mobAttackResult = MobAccuracyCheck(mobAttackResult)
-
-        if playerAttackResult == "Hits" and mobAttackResult == "Hits":
+        
+        #Iterate through all possible scenarios
+        if playerAttackResult == "Hits" and mobAttackResult == "Hits"
             if fight == 1 and mobAttack == 1:
                 ComDraw(playerAttackResult, mobAttackResult)
 
