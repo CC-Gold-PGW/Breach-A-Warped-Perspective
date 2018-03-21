@@ -301,6 +301,8 @@ def room3():
 
 #def room11():
 
+#----------------------------------------------------------------------
+
 def healthkit():
     global playerHP, playerMax, heal, gainhealth
     if heal > 0:
@@ -320,7 +322,7 @@ def healthkit():
 
 
 
-
+#---------------------------------------------------------------
 
 
 #intro()
