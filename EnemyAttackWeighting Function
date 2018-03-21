@@ -1,0 +1,16 @@
+import random
+AttackPreference = "Defensive"
+AttackResult = ""
+#3 Attack Types: Defensive, Offensive, Opportunistic
+#Opportunistic Beats Offensive
+#Defensive Beats Opportunistic
+#Offensive Beats Defensive
+
+def EnemyAttackWeighting(Preference):
+    WeightingList = ["Defensive","Offensive","Opportunistic",Preference,Preference,Preference]
+    AttackChoice = random.choice(WeightingList)
+    return AttackChoice
+
+
+AttackResult = EnemyAttackWeighting(AttackPreference)
+print (AttackResult)
