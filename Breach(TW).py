@@ -218,7 +218,7 @@ def Combat():
             mobAttackResult = MobAccuracyCheck(mobAttackResult)
         
         #Iterate through all possible scenarios
-        if playerAttackResult == "Hits" and mobAttackResult == "Hits"
+        if playerAttackResult == "Hits" and mobAttackResult == "Hits":
             if fight == 1 and mobAttack == 1:
                 ComDraw(playerAttackResult, mobAttackResult)
 
