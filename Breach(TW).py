@@ -111,7 +111,7 @@ def intro():
     print ("")
     #Load the first room to begin the game
     room1()
-#===============================================================================    
+#===============================================================================
 #Player Option Functions
 #-------------------------------------------------------------------------------
 def Load(playerHP,playerMaxHP,playerDMG,playerCrit,playerCritDMG,playerAccuracy,heal,enter1,enter2,enter3,enter4,enter5,enter6,enter7,enter8,enter9,enter10,enter11,currentLocation):
@@ -138,7 +138,7 @@ def Load(playerHP,playerMaxHP,playerDMG,playerCrit,playerCritDMG,playerAccuracy,
         enter11 = stats[17]
         currentLocation = stats[18]
         return playerHP,playerMaxHP,playerDMG,playerCrit,playerCritDMG,playerAccuracy,heal,enter1,enter2,enter3,enter4,enter5,enter6,enter7,enter8,enter9,enter10,enter11,currentLocation
-#------------------------------------------------------------------------------- 
+#-------------------------------------------------------------------------------
 def Location(currentLocation):
     #Used by the Load function to find the correct room function to run based on the Current Location flag
     if currentLocation == 1:
@@ -163,7 +163,7 @@ def Location(currentLocation):
         room10()
     elif currentLocation == 11:
         room11()
-#------------------------------------------------------------------------------- 
+#-------------------------------------------------------------------------------
 def healthkit():
     #Handles the usage of Health Kits.
     #Health Kits return you to your maximum HP and have one use
@@ -250,7 +250,7 @@ def SaveGame(playerHP,playerMaxHP,playerDMG,playerCrit,playerCritDMG,playerAccur
     file.close()
 #===============================================================================
 #Validators & Error Catching
-#-------------------------------------------------------------------------------    
+#-------------------------------------------------------------------------------
 def validateNum(value, min, max):
 #Input validator: Takes the inputted number and the range of valid choices and checks for value validity
     while True:
@@ -269,7 +269,7 @@ def validateNum(value, min, max):
 #===============================================================================
 #Combat System Functions
 #Player and enemy make opposed choices in a Rock/Paper/Scissors format and roll 1d20 to determine accuracy
-#------------------------------------------------------------------------------- 
+#-------------------------------------------------------------------------------
 def EnemyAttackWeighting(Preference1,Preference2):
 #This function determines the enemy's choices, selected randomly weighted toward their preference
 #Some enemies switch their attack preference when reduced below 1/2 HP
@@ -317,7 +317,7 @@ def MobAccuracyCheck(AttackResult):
       AttackResult = "Misses"
   print("The Monster",AttackResult+"!")
   return AttackResult
-#------------------------------------------------------------------------------- 
+#-------------------------------------------------------------------------------
 def Combat():
 #Main combat function.  Loops until combat ends, and is in charge of calling the other combat functions
     global AttackPreference1, AttackPreference2
@@ -350,7 +350,7 @@ def Combat():
             playerAttackResult = PlayerAccuracyCheck(playerAttackResult)
             mobAttack = EnemyAttackWeighting(AttackPreference1, AttackPreference2)
             mobAttackResult = MobAccuracyCheck(mobAttackResult)
-        
+
         #Iterate through all possible scenarios:
         #If both parties Hit combat is resolved by their attack choice
         #If one hits and the other misses the one that hits wins that combat and deals damage
@@ -427,7 +427,7 @@ def Combat():
 
         elif playerAttackResult == "Crits" and mobAttackResult == "Hits":
             ComDraw(playerAttackResult, mobAttackResult)
-#------------------------------------------------------------------------------- 
+#-------------------------------------------------------------------------------
 def ComWin(playerAttackResult, mobAttackResult):
     #Combat win scenario: Player deals damage, Enemy does not
     global MobCurrentHP, playerDMG, playerCritDMG
@@ -437,7 +437,7 @@ def ComWin(playerAttackResult, mobAttackResult):
     else:
         MobCurrentHP = MobCurrentHP - (playerDMG)
     return MobCurrentHP
-#------------------------------------------------------------------------------- 
+#-------------------------------------------------------------------------------
 def ComLose(playerAttackResult, mobAttackResult):
     #Combat Lose scenario: Enemy deals damage, Player does not
     global playerHP, mobDMG, mobCritDMG
@@ -447,7 +447,7 @@ def ComLose(playerAttackResult, mobAttackResult):
     else:
         playerHP = playerHP - mobDMG
     return playerHP
-#------------------------------------------------------------------------------- 
+#-------------------------------------------------------------------------------
 def ComDraw(playerAttackResult, mobAttackResult):
     #Combat Draw scenario: Both parties deal damage
     global MobCurrentHP, mobDMG, playerDMG, playerHP, playerCritDMG, mobCritDMG
@@ -468,7 +468,7 @@ def ComDraw(playerAttackResult, mobAttackResult):
 #Room Functions:
   #Each room handles the display of text for that room, as well as the stats of any enemy you encounter
   #and any items or equipment to be found there
-#-------------------------------------------------------------------------------     
+#-------------------------------------------------------------------------------
 def room1():
     #Entrance
     global currentLocation
@@ -481,7 +481,10 @@ def room1():
     print ("If there is an exit to this place it lies beyond these three active doors.")
     print ("")
     input("Press enter to continue...")
+
     Options()
+    print("")
+
     print ("1. There is a Green door to the West")
     print ("2. There is a Green door to the South")
     print ("3. There is a Green door to the East")
@@ -493,7 +496,7 @@ def room1():
         room4()
     elif move == 3:
         room2()
-#------------------------------------------------------------------------------- 
+#-------------------------------------------------------------------------------
 def room2():
     #Armoury
     #Contains the Pistol
@@ -502,6 +505,7 @@ def room2():
     print (currentLocation)
     global playerDMG
     global enter2
+
     if enter2 == 0:
         print("As you walk into the room bright lights burst into life above your head.A deep alien voice booms above your head")
         print("and your suit’s translation program starts up and immediately displays an error.  This language is apparently")
@@ -528,7 +532,6 @@ def room2():
         Options()
         print("")
 
-
         print("1. There is a Green door to the West ")
         print("2. There is a Green door to the South ")
         print ("Where do you wish to go?")
@@ -543,6 +546,9 @@ def room2():
             print ("room6()")
 
     else:
+        Options()
+        print("")
+
         print ("You have been here")
         print("1. There is a Green door to the West ")
         print("2. There is a Green door to the South ")
@@ -554,84 +560,202 @@ def room2():
             print ("room1()")
         else:
             print("room6()")
-#------------------------------------------------------------------------------- 
+#-------------------------------------------------------------------------------
 def room3():
     #Equipment Bay
     #Contains the Breach Spawn encounter
+    global enter3
     global currentLocation
     currentLocation = 3
-    print("As the door slides open, it reveals a pitch black room.  There is a sound of something whirring and crackling")
-    print("seemingly emanating from the back of the room, but you cannot identify the source as what little of the room")
-    print("appears to be strewn with debris and machinery and obscures your view.")
-    print("")
-    input("press enter to continue...")
-    print("Then you become of the sound of dripping water, then a grunting sound so soft you almost mistook it for your own")
-    print("breath.  The hairs on the back of your neck raise and you feel a sense of incredible dread.")
-    print("")
-    input("press enter to continue...")
-    print("The light at your back reminds you a few step backwards, and the door would slide shut and return you to safety")
-    print("However if you are to find a way out of this place, you will have to search every corner of this place.")
-    print("")
-    input("press enter to continue...")
-    print("Should you swallow your fear and advance, or retreat for now? ")
-    print("")
 
-    print("1. Advance")
-    print("2. Retreat")
-
-    choice = validateNum(choice,1,2)
-
-    if choice == 1:
-        if playerDMG > 10:
-            Combat()
-        else:
-            print("GAME OVER")
-            print("")
-    elif choice == 2:
-        print("You retreat...")
+    if enter3 ==0:
+        print("As the door slides open, it reveals a pitch black room.  There is a sound of something whirring and crackling")
+        print("seemingly emanating from the back of the room, but you cannot identify the source as what little of the room")
+        print("appears to be strewn with debris and machinery and obscures your view.")
         print("")
-        room1()
-#------------------------------------------------------------------------------- 
-#def room4():
+        input("press enter to continue...")
+        print("Then you become of the sound of dripping water, then a grunting sound so soft you almost mistook it for your own")
+        print("breath.  The hairs on the back of your neck raise and you feel a sense of incredible dread.")
+        print("")
+        input("press enter to continue...")
+        print("The light at your back reminds you a few step backwards, and the door would slide shut and return you to safety")
+        print("However if you are to find a way out of this place, you will have to search every corner of this place.")
+        print("")
+        input("press enter to continue...")
+        print("Should you swallow your fear and advance, or retreat for now? ")
+        print("")
+
+        print("1. Advance")
+        print("2. Retreat")
+        enter3 =1
+
+        Options()
+        print("")
+
+        choice = 0
+        choice = validateNum(choice,1,2)
+
+        if choice == 1:
+            if playerDMG > 10:
+                Combat()
+            else:
+                print("GAME OVER")
+                print("")
+        elif choice == 2:
+            print("You retreat...")
+            print("")
+            room1()
+
+        print("You resolve not to spend a second longer in this room than you have to as you switch your suit lights back on and ")
+        print("consider the two available doors.")
+        print("")
+        print("1.There is a green door to the South")
+        print("2.There is a green door to the East")
+        print("")
+
+        Options()
+        print("")
+
+        move =0
+        move = validateNum(move,1,2)
+        if move ==1:
+            room5()
+        else:
+            room1()
+
+
+    else:
+        print("You return to the dark room where you had the encounter with the monster.")
+        print("The feeling of unease you had the first time you entered has not left you.")
+        print("")
+        input("press enter to continue...")
+        print("The door slides shut behind you plunging you into a green tinted darkness, startling you.  In the silence that ensures ")
+        print("the faint sound of whirring at the back of the room, and of liquid dripping, echos inside your brain.")
+        print("")
+        input("press enter to continue...")
+        print("You resolve not to spend a second longer in this room than you have to as you switch your suit lights back on and ")
+        print("consider the two available doors.")
+        print("")
+
+        Options()
+        print("")
+
+        print("1.There is a green door to the South")
+        print("2.There is a green door to the East")
+        print("What do you do?")
+
+
+
+        move =0
+        move = validateNum(move,1,2)
+        if move ==1:
+            room5()
+        else:
+            room1()
+#-------------------------------------------------------------------------------
+def room4():
     #Medbay
     #Contains a First Aid kit
+    global enter4
+    global currentLocation
+    global heal
+    currentLocation = 4
+    enter4 =0
 
-#------------------------------------------------------------------------------- 
+    if enter4 ==0:
+        print("This room is well lit and consists of a smaller chamber separated by a low wall, from the larger chamber which")
+        print("appears to be filled with regularly spaced rectangular objects, each of which is surrounded by alien machinery.  More ")
+        print("such machinery hangs from the ceiling, all of which appears to be completely inert but glows with a soft green light.")
+        print("")
+        input("press enter to continue...")
+        print("Exploring the main chamber fully reveals a small grey box tucked into one corner.  Upon closer examination the box ")
+        print("springs open revealing various needles, sprays and other items that normally belong in a first aid kit.")
+        print("")
+        input("press enter to continue...")
+        print("A band of blue light emits from the box and sweeps over your body and your suit is suddenly receives a transmission ")
+        print("from what appears to be the box currently resting in your arms.")
+        print("")
+        input("press enter to continue...")
+        print("The transmission does not require translation and informs you it is indeed a first aid kit.   Upon closing the box again ")
+        print("it folds into itself, rapidly reducing in size until it is a thin grey square in the palm of your hand.")
+        print("")
+        input("press enter to continue...")
+        print("Considering the layout of the room, what you realise are beds and the fact the room contained a first aid kit you ")
+        print("reason that this room was some sort of medical bay.")
+        print("")
+        input("press enter to continue...")
+        print("Disregarding how an alien machine managed to communicate with your suit without translation you tuck the folded ")
+        print("first aid kit into one of your suit’s pockets, hoping you will have no need to use it before escaping this place.")
+
+        heal = heal +1
+        enter4 =1
+
+        print("")
+        input("press enter to continue...")
+        print("You notice one of the doors leading from here casts a blue light different from the green doors you have encountered ")
+        print("before.")
+        print("1.There is a green door to the North")
+        print("2.There is a green door to the East")
+        print("3.There is a blue door to the West")
+        print("What do you do?")
+
+        Options()
+        print("")
+
+        while True:
+            move =0
+            move = validateNum(move,1,3)
+            if move ==1:
+                room1()
+            elif move ==2:
+                room6()
+            else:
+                if room5 ==1:
+                    room7()
+                else:
+                    print("You approach the door, but it does not respond. Since its a different colour from the other green doors you have")
+                    print("encountered so far, you reason there must be some sort of key you will need before you can open this door.")
+                    print("Shrugging, you turn to consider your other options.")
+
+
+
+
+#-------------------------------------------------------------------------------
 #def room5():
     #Equipment Storage
     #Contains the Shotgun
     #Contains the Blue Key
 
-#------------------------------------------------------------------------------- 
+#-------------------------------------------------------------------------------
 #def room6():
     #Checkpoint
     #Contains the Sub-Machinegun
     #Drone Walker
 
-#------------------------------------------------------------------------------- 
+#-------------------------------------------------------------------------------
 #def room7():
     #Weapons Control Bay
     #Contains the Drone Processor encounter
     #Contains the Assault Rifle
     #Contains the Red Key
 
-#------------------------------------------------------------------------------- 
+#-------------------------------------------------------------------------------
 #def room8():
     #Locker Room
     #Contains the Armoured Suit
 
-#------------------------------------------------------------------------------- 
+#-------------------------------------------------------------------------------
 #def room9():
     #Habitat Access
     #Contains the Drone Mother encounter
     #Contains a Health Kit
 
-#------------------------------------------------------------------------------- 
+#-------------------------------------------------------------------------------
 #def room10():
     #Engineering Bay
     #Contains the Breach Lord encounter
 
-#------------------------------------------------------------------------------- 
+#-------------------------------------------------------------------------------
 #def room11():
     #The Bridge
     #GAME END
@@ -639,13 +763,14 @@ def room3():
 #===============================================================================
 #MAIN CODE
 #===============================================================================
-Start()
+#Start()
 #intro()
 #healthkit()
 #Combat()
 #room1()
 #room2()
 #room3()
+room4()
 
 #===============================================================================
 #PROGRAM END
