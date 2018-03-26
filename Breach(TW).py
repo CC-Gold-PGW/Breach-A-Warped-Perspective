@@ -273,7 +273,7 @@ def EnemyAttackWeighting(Preference1,Preference2):
         AttackChoice = random.choice(WeightingList)
         print(WeightingList)
         return AttackChoice
-    else
+    else:
         WeightingList = [1,2,3,Preference1,Preference1,Preference1]
         AttackChoice = random.choice(WeightingList)
         print(WeightingList)
