@@ -7,6 +7,7 @@
 #===============================================================================
 #IMPORTING LIBRARIES
 #===============================================================================
+import sys
 import math
 import random
 import time
@@ -61,16 +62,19 @@ def Start():
     print ("")
     print ("1. New Game")
     print ("2. Continue")
+    print ("3. Exit Game")
     print ("")
     choice = 0
     #Using external validator function for all choices
-    choice = validateNum(choice,1,2)
+    choice = validateNum(choice,1,3)
     if choice == 1:
         intro()
     elif choice == 2:
         Load(playerHP,playerMaxHP,playerDMG,playerCrit,playerCritDMG,playerAccuracy,heal,enter1,enter2,enter3,enter4,enter5,enter6,enter7,enter8,enter9,enter10,enter11,currentLocation)
         #Runs external function for sending the player to the correct room
         Location = Location(currentLocation)
+    elif choice == 3:
+        sys.exit("Shutting Down")
 #-------------------------------------------------------------------------------
 def intro():
     #Displays the game's intro text
@@ -188,9 +192,10 @@ def Options():
         print ("1. Move")
         print ("2. Heal")
         print ("3. Save Game")
+        print ("4. Exit Game")
         print ("")
         Option = 0
-        Option = validateNum(Option,1,3)
+        Option = validateNum(Option,1,4)
         if Option == 1:
             return
         elif Option == 2:
@@ -198,6 +203,8 @@ def Options():
         elif Option == 3:
             SaveGame(playerHP,playerMaxHP,playerDMG,playerCrit,playerCritDMG,playerAccuracy,heal,enter1,enter2,enter3,enter4,enter5,enter6,enter7,enter8,enter9,enter10,enter11,currentLocation)
             print ("Game Saved")
+        elif Option == 4:
+            sys.exit("Shutting Down")
 #-------------------------------------------------------------------------------
 def SaveGame(playerHP,playerMaxHP,playerDMG,playerCrit,playerCritDMG,playerAccuracy,heal,enter1,enter2,enter3,enter4,enter5,enter6,enter7,enter8,enter9,enter10,enter11,currentLocation):
 #Handles saving the game to an external file.  Only one save should be supported, saving again will overwrite the last.
