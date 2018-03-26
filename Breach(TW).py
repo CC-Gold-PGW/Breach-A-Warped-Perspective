@@ -82,30 +82,35 @@ def intro():
     input("press enter to continue...")
     print ("What do you do?")
     print ("")
+    #Load the first room to begin the game
     room1()
 
 #-------------------------------------------------------------------------------
- #Global Variables
+#Global Variables
+#Player global values should be changed directly by the room functions: No need for passing them in
 playerMaxHP = 100
 playerHP = 100
 playerDMG = 25
 playerAccuracy = 12
 playerCrit = 19
 playerCritDMG = 1.5
-fight = ""
+#Enemy global values like player values should be updated by the room functions as needed
 MobCurrentHP = 75
 mobDMG = 40
 mobAccuracy = 10
 mobCrit = 19
 mobCritDMG = 1.5
 MobMaxHP = 75
+#Tracks the number of healing kits carried
 heal = 1
+#Holds the monsters 2 attack preferences
+#3 types of attacks.  Defensive beats Opportunistic, Opportunistic beats Offensive, Offensive beats Defensive
 AttackPreference1 = "Offensive"
 AttackPreference2 = "Offensive"
-#3 types of attacks.  Defensive beats Opportunistic, Opportunistic beats Offensive, Offensive beats Defensive
+#Tracks the players current location
 currentLocation = 0
 #=------------------------------------------------------------------------------
- #Room entered
+ #Flags tracking which rooms have been entered
 enter1 = 0
 enter2 = 0
 enter3 = 0
@@ -120,7 +125,7 @@ enter11 = 0
 
 #-------------------------------------------------------------------------------
 
-#Validator
+#Input validator: Takes the inputted number and the range of valid choices and checks for value validity
 def validateNum(value, min, max):
     while True:
         try:
@@ -132,15 +137,18 @@ def validateNum(value, min, max):
             if value >= min and value <= max:
                 return value
             else:
-                print ("ree")
+                print ("Please enter a number between",min,"and",max)
                 continue
 
 
 
 
 #Combat System
+#Player and enemy make opposed choices in a Rock/Paper/Scissors format and roll 1d20 to determine accuracy
 
 def EnemyAttackWeighting(Preference1,Preference2):
+#This function determines the enemy's choices, selected randomly weighted toward their preference
+#Some enemies switch their attack preference when reduced below 1/2 HP
     global MobCurrentHP
     global MobMaxHP
     if MobCurrentHP <= (MobMaxHP/2):
@@ -148,7 +156,7 @@ def EnemyAttackWeighting(Preference1,Preference2):
         AttackChoice = random.choice(WeightingList)
         print(WeightingList)
         return AttackChoice
-    else:
+    else
         WeightingList = [1,2,3,Preference1,Preference1,Preference1]
         AttackChoice = random.choice(WeightingList)
         print(WeightingList)
@@ -156,6 +164,7 @@ def EnemyAttackWeighting(Preference1,Preference2):
 
 
 def PlayerAccuracyCheck(AttackResult):
+  #Function for handling the player's accuracy roll and determining the result of their attack
   global playerCrit, playerAccuracy
   Roll = 0
   Roll = random.randint(1,20)
@@ -171,6 +180,7 @@ def PlayerAccuracyCheck(AttackResult):
   return AttackResult
 
 def MobAccuracyCheck(AttackResult):
+  #Function for handling the enemy's accuracy roll and determining the result of their attack
   global mobCrit, mobAccuracy
   Roll = 0
   Roll = random.randint(1,20)
@@ -186,9 +196,11 @@ def MobAccuracyCheck(AttackResult):
   return AttackResult
 
 def Combat():
+#Main combat function.  Loops until combat ends, and is in charge of calling the other combat functions
     global AttackPreference1, AttackPreference2
     playerAttackResult = ""
     mobAttackResult = ""
+    fight = 1
 
     while playerHP > 0 or MobCurrentHP > 0:
         #Loops until either player or enemy are dead
@@ -210,14 +222,16 @@ def Combat():
             print ("You have",playerHP,"HP remaining")
             print ("The enemy has",MobCurrentHP,"HP Remaining")
             print ("")
-            fight = 1
             #Using external validator for all player choices
             fight = validateNum(fight,1,3)
             playerAttackResult = PlayerAccuracyCheck(playerAttackResult)
             mobAttack = EnemyAttackWeighting(AttackPreference1, AttackPreference2)
             mobAttackResult = MobAccuracyCheck(mobAttackResult)
         
-        #Iterate through all possible scenarios
+        #Iterate through all possible scenarios:
+        #If both parties Hit combat is resolved by their attack choice
+        #If one hits and the other misses the one that hits wins that combat and deals damage
+        #Critical Hits are handled the same way as Hits but grant a bonus multiplier to damage dealt
         if playerAttackResult == "Hits" and mobAttackResult == "Hits":
             if fight == 1 and mobAttack == 1:
                 ComDraw(playerAttackResult, mobAttackResult)
@@ -291,13 +305,8 @@ def Combat():
         elif playerAttackResult == "Crits" and mobAttackResult == "Hits":
             ComDraw(playerAttackResult, mobAttackResult)
 
-
-
-
-
-
-
 def ComWin(playerAttackResult, mobAttackResult):
+    #Combat win scenario: Player deals damage, Enemy does not
     global MobCurrentHP, playerDMG, playerCritDMG
     if playerAttackResult == "Crits":
         MobCurrentHP = MobCurrentHP - (round(playerDMG * playerCritDMG))
@@ -307,6 +316,7 @@ def ComWin(playerAttackResult, mobAttackResult):
     return MobCurrentHP
 
 def ComLose(playerAttackResult, mobAttackResult):
+    #Combat Lose scenario: Enemy deals damage, Player does not
     global playerHP, mobDMG, mobCritDMG
     if mobAttackResult == "Crits":
         playerHP = playerHP - (round(mobDMG * mobCritDMG))
@@ -316,13 +326,15 @@ def ComLose(playerAttackResult, mobAttackResult):
     return playerHP
 
 def ComDraw(playerAttackResult, mobAttackResult):
+    #Combat Draw scenario: Both parties deal damage
     global MobCurrentHP, mobDMG, playerDMG, playerHP, playerCritDMG, mobCritDMG
+    #Resolving player damage
     if playerAttackResult == "Crits":
         MobCurrentHP = MobCurrentHP - (round(playerDMG * playerCritDMG))
         print("You Critically Hit!")
     else:
         MobCurrentHP = MobCurrentHP - (playerDMG)
-
+    #Resolving enemy damage
     if mobAttackResult == "Crits":
         playerHP = playerHP - (round(mobDMG * mobCritDMG))
         print("The mob Critically Hit!")
@@ -331,8 +343,12 @@ def ComDraw(playerAttackResult, mobAttackResult):
     return MobCurrentHP, playerHP
 
 #-------------------------------------------------------------------------------
-  #Rooms
+  #Room Functions:
+  #Each room handles the display of text for that room, as well as the stats of any enemy you encounter
+  #and any items or equipment to be found there
+    
 def room1():
+    #Entrance
     global currentLocation
     currentLocation = 1
     print (currentLocation)
@@ -356,9 +372,9 @@ def room1():
     elif move == 3:
         room2()
 
-
-
 def room2():
+    #Armoury
+    #Contains the Pistol
     global currentLocation
     currentLocation = 2
     print (currentLocation)
@@ -420,6 +436,8 @@ def room2():
 
 
 def room3():
+    #Equipment Bay
+    #Contains the Breach Spawn encounter
     global currentLocation
     currentLocation = 3
     print("As the door slides open, it reveals a pitch black room.  There is a sound of something whirring and crackling")
@@ -456,10 +474,18 @@ def room3():
 
 
 #def room4():
+    #Medbay
+    #Contains a First Aid kit
 
 #def room5():
+    #Equipment Storage
+    #Contains the Shotgun
+    #Contains the Blue Key
 
 #def room6():
+    #Checkpoint
+    #Contains the Sub-Machinegun
+    #Drone Walker
 
 #def room7():
 
