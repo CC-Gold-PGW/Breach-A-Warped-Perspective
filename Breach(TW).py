@@ -74,7 +74,7 @@ def Start():
 #-------------------------------------------------------------------------------
 def intro():
     #Displays the game's intro text
-    print ("It's been 2 hours since you were seperated from your team.  The cave you stand in is cold and dank, musty air fills your lungs.")
+    print ("It's been 2 hours since you were seperated from your team.  The cave you stand in is cold and dank and musty refiltered air fills your lungs.")
     print ("")
     input("press enter to continue...")
     print ("You avoided the rockfall unscathed, but were unable to find anyone else who had, and lack the tools to dig through the rubble behind you.")
