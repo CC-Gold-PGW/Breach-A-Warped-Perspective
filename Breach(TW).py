@@ -1,12 +1,60 @@
+#===============================================================================
+#CREDITS & LICENSE
+#===============================================================================
 #Rocket Propelled Games
 #Breach: A Warped Perspective
 #Chris, Finn, Roman, Liam
-#------------------------------------------------------------------------------
+#===============================================================================
+#IMPORTING LIBRARIES
+#===============================================================================
 import math
 import random
 import time
-
-
+#===============================================================================
+#INITALISING GLOBAL VARIABLES
+#===============================================================================
+#Player global values should be changed directly by the room functions: No need for passing them into functions
+#Will make these an object instead later
+playerMaxHP = 100
+playerHP = 100
+playerDMG = 25
+playerAccuracy = 12
+playerCrit = 19
+playerCritDMG = 1.5
+#Enemy global values like player values should be updated by the room functions as needed
+#Should also become an object later
+MobCurrentHP = 75
+mobDMG = 40
+mobAccuracy = 10
+mobCrit = 19
+mobCritDMG = 1.5
+MobMaxHP = 75
+#Tracks the number of healing kits carried
+heal = 1
+#Holds the monsters 2 attack preferences
+#3 types of attacks.  Defensive beats Opportunistic, Opportunistic beats Offensive, Offensive beats Defensive
+AttackPreference1 = "Offensive"
+AttackPreference2 = "Offensive"
+#Tracks the players current location
+currentLocation = 0
+#------------------------------------------------------------------------------
+ #Flags tracking which rooms have been entered
+enter1 = 0
+enter2 = 0
+enter3 = 0
+enter4 = 0
+enter5 = 0
+enter6 = 0
+enter7 = 0
+enter8 = 0
+enter9 = 0
+enter10 = 0
+enter11 = 0
+#===============================================================================
+#DEFINING FUNCTIONS
+#===============================================================================
+#Game Start Functions
+#-------------------------------------------------------------------------------
 def Start():
     #Shows title screen and provides options for starting a new game or loading an existing one.
     global playerHP,playerMaxHP,playerDMG,playerCrit,playerCritDMG,playerAccuracy,heal,enter1,enter2,enter3,enter4,enter5,enter6,enter7,enter8,enter9,enter10,enter11,currentLocation
@@ -23,32 +71,7 @@ def Start():
         Load(playerHP,playerMaxHP,playerDMG,playerCrit,playerCritDMG,playerAccuracy,heal,enter1,enter2,enter3,enter4,enter5,enter6,enter7,enter8,enter9,enter10,enter11,currentLocation)
         #Runs external function for sending the player to the correct room
         Location = Location(currentLocation)
-
-def Load(playerHP,playerMaxHP,playerDMG,playerCrit,playerCritDMG,playerAccuracy,heal,enter1,enter2,enter3,enter4,enter5,enter6,enter7,enter8,enter9,enter10,enter11,currentLocation):
-    #Loads all revelant global variables from an external file and moves player to the correct room
-    with open("BreachSaved.txt", "r") as stats:
-        stats = stats.read().split(" ")
-        playerHP = stats[0]
-        playerMaxHP = stats[1]
-        playerDMG = stats[2]
-        playerCrit = stats[3]
-        playerCritDMG = stats[4]
-        playerAccuracy = stats[5]
-        heal = stats[6]
-        enter1 = stats[7]
-        enter2 = stats[8]
-        enter3 = stats[9]
-        enter4 = stats[10]
-        enter5 = stats[11]
-        enter6 = stats[12]
-        enter7 = stats[13]
-        enter8 = stats[14]
-        enter9 = stats[15]
-        enter10 = stats[16]
-        enter11 = stats[17]
-        currentLocation = stats[18]
-        return playerHP,playerMaxHP,playerDMG,playerCrit,playerCritDMG,playerAccuracy,heal,enter1,enter2,enter3,enter4,enter5,enter6,enter7,enter8,enter9,enter10,enter11,currentLocation
-
+#-------------------------------------------------------------------------------
 def intro():
     #Displays the game's intro text
     print ("It's been 2 hours since you were seperated from your team.  The cave you stand in is cold and dank, musty air fills your lungs.")
@@ -84,49 +107,145 @@ def intro():
     print ("")
     #Load the first room to begin the game
     room1()
-
+#===============================================================================    
+#Player Option Functions
 #-------------------------------------------------------------------------------
-#Global Variables
-#Player global values should be changed directly by the room functions: No need for passing them in
-playerMaxHP = 100
-playerHP = 100
-playerDMG = 25
-playerAccuracy = 12
-playerCrit = 19
-playerCritDMG = 1.5
-#Enemy global values like player values should be updated by the room functions as needed
-MobCurrentHP = 75
-mobDMG = 40
-mobAccuracy = 10
-mobCrit = 19
-mobCritDMG = 1.5
-MobMaxHP = 75
-#Tracks the number of healing kits carried
-heal = 1
-#Holds the monsters 2 attack preferences
-#3 types of attacks.  Defensive beats Opportunistic, Opportunistic beats Offensive, Offensive beats Defensive
-AttackPreference1 = "Offensive"
-AttackPreference2 = "Offensive"
-#Tracks the players current location
-currentLocation = 0
-#=------------------------------------------------------------------------------
- #Flags tracking which rooms have been entered
-enter1 = 0
-enter2 = 0
-enter3 = 0
-enter4 = 0
-enter5 = 0
-enter6 = 0
-enter7 = 0
-enter8 = 0
-enter9 = 0
-enter10 = 0
-enter11 = 0
-
+def Load(playerHP,playerMaxHP,playerDMG,playerCrit,playerCritDMG,playerAccuracy,heal,enter1,enter2,enter3,enter4,enter5,enter6,enter7,enter8,enter9,enter10,enter11,currentLocation):
+    #Loads all revelant global variables from an external file and moves player to the correct room
+    with open("BreachSaved.txt", "r") as stats:
+        stats = stats.read().split(" ")
+        playerHP = stats[0]
+        playerMaxHP = stats[1]
+        playerDMG = stats[2]
+        playerCrit = stats[3]
+        playerCritDMG = stats[4]
+        playerAccuracy = stats[5]
+        heal = stats[6]
+        enter1 = stats[7]
+        enter2 = stats[8]
+        enter3 = stats[9]
+        enter4 = stats[10]
+        enter5 = stats[11]
+        enter6 = stats[12]
+        enter7 = stats[13]
+        enter8 = stats[14]
+        enter9 = stats[15]
+        enter10 = stats[16]
+        enter11 = stats[17]
+        currentLocation = stats[18]
+        return playerHP,playerMaxHP,playerDMG,playerCrit,playerCritDMG,playerAccuracy,heal,enter1,enter2,enter3,enter4,enter5,enter6,enter7,enter8,enter9,enter10,enter11,currentLocation
+#------------------------------------------------------------------------------- 
+def Location(currentLocation):
+    #Used by the Load function to find the correct room function to run based on the Current Location flag
+    if currentLocation == 1:
+        room1()
+    elif currentLocation == 2:
+        room2()
+    elif currentLocation == 3:
+        room3()
+    elif currentLocation == 4:
+        room4()
+    elif currentLocation == 5:
+        room5()
+    elif currentLocation == 6:
+        room6()
+    elif currentLocation == 7:
+        room7()
+    elif currentLocation == 8:
+        room8
+    elif currentLocation == 9:
+        room9()
+    elif currentLocation == 10:
+        room10()
+    elif currentLocation == 11:
+        room11()
+#------------------------------------------------------------------------------- 
+def healthkit():
+    #Handles the usage of Health Kits.
+    #Health Kits return you to your maximum HP and have one use
+    global playerHP, playerMaxHP, heal, gainhealth
+    if heal > 0:
+        print ("1. Yes")
+        print ("2. No")
+        print (playerHP)
+        gainhealth = 2
+        gainhealth = validateNum(gainhealth,1,2)
+        print(gainhealth)
+        if gainhealth == 1:
+            playerHP = playerMaxHP
+            print("You have healed yourself")
+            print (playerHP)
+            heal = heal - 1
+        elif gainhealth == 2:
+            print("No health kit was used")
 #-------------------------------------------------------------------------------
-
-#Input validator: Takes the inputted number and the range of valid choices and checks for value validity
+def Options():
+    #Gives the player the option to use a Health Kit, Save the game or continue
+    #Should be run at the end of each room before they choose which door to go through
+    while True:
+        print ("What do you want to do?")
+        print ("")
+        print ("1. Move")
+        print ("2. Heal")
+        print ("3. Save Game")
+        print ("")
+        Option = 0
+        Option = validateNum(Option,1,3)
+        if Option == 1:
+            return
+        elif Option == 2:
+            healthkit()
+        elif Option == 3:
+            SaveGame(playerHP,playerMaxHP,playerDMG,playerCrit,playerCritDMG,playerAccuracy,heal,enter1,enter2,enter3,enter4,enter5,enter6,enter7,enter8,enter9,enter10,enter11,currentLocation)
+            print ("Game Saved")
+#-------------------------------------------------------------------------------
+def SaveGame(playerHP,playerMaxHP,playerDMG,playerCrit,playerCritDMG,playerAccuracy,heal,enter1,enter2,enter3,enter4,enter5,enter6,enter7,enter8,enter9,enter10,enter11,currentLocation):
+#Handles saving the game to an external file.  Only one save should be supported, saving again will overwrite the last.
+    file = open("BreachSaved.txt", "w")
+    file.write(str(playerHP))
+    file.write(" ")
+    file.write(str(playerMaxHP))
+    file.write(str(" "))
+    file.write(str(playerDMG))
+    file.write(str(" "))
+    file.write(str(playerCrit))
+    file.write(str(" "))
+    file.write(str(playerCritDMG))
+    file.write(str(" "))
+    file.write(str(playerAccuracy))
+    file.write(str(" "))
+    file.write(str(heal))
+    file.write(str(" "))
+    file.write(str(enter1))
+    file.write(str(" "))
+    file.write(str(enter2))
+    file.write(str(" "))
+    file.write(str(enter3))
+    file.write(str(" "))
+    file.write(str(enter4))
+    file.write(str(" "))
+    file.write(str(enter5))
+    file.write(str(" "))
+    file.write(str(enter6))
+    file.write(str(" "))
+    file.write(str(enter7))
+    file.write(str(" "))
+    file.write(str(enter8))
+    file.write(str(" "))
+    file.write(str(enter9))
+    file.write(str(" "))
+    file.write(str(enter10))
+    file.write(str(" "))
+    file.write(str(enter11))
+    file.write(str(" "))
+    file.write(str(currentLocation))
+    file.write("\n")
+    file.close()
+#===============================================================================
+#Validators & Error Catching
+#-------------------------------------------------------------------------------    
 def validateNum(value, min, max):
+#Input validator: Takes the inputted number and the range of valid choices and checks for value validity
     while True:
         try:
             value = int(input("Please choose your option"))
@@ -140,12 +259,10 @@ def validateNum(value, min, max):
                 print ("Please enter a number between",min,"and",max)
                 continue
 
-
-
-
-#Combat System
+#===============================================================================
+#Combat System Functions
 #Player and enemy make opposed choices in a Rock/Paper/Scissors format and roll 1d20 to determine accuracy
-
+#------------------------------------------------------------------------------- 
 def EnemyAttackWeighting(Preference1,Preference2):
 #This function determines the enemy's choices, selected randomly weighted toward their preference
 #Some enemies switch their attack preference when reduced below 1/2 HP
@@ -161,8 +278,7 @@ def EnemyAttackWeighting(Preference1,Preference2):
         AttackChoice = random.choice(WeightingList)
         print(WeightingList)
         return AttackChoice
-
-
+#-------------------------------------------------------------------------------
 def PlayerAccuracyCheck(AttackResult):
   #Function for handling the player's accuracy roll and determining the result of their attack
   global playerCrit, playerAccuracy
@@ -178,7 +294,7 @@ def PlayerAccuracyCheck(AttackResult):
       AttackResult = "Misses"
   print("The Player",AttackResult+"!")
   return AttackResult
-
+#-------------------------------------------------------------------------------
 def MobAccuracyCheck(AttackResult):
   #Function for handling the enemy's accuracy roll and determining the result of their attack
   global mobCrit, mobAccuracy
@@ -194,7 +310,7 @@ def MobAccuracyCheck(AttackResult):
       AttackResult = "Misses"
   print("The Monster",AttackResult+"!")
   return AttackResult
-
+#------------------------------------------------------------------------------- 
 def Combat():
 #Main combat function.  Loops until combat ends, and is in charge of calling the other combat functions
     global AttackPreference1, AttackPreference2
@@ -304,7 +420,7 @@ def Combat():
 
         elif playerAttackResult == "Crits" and mobAttackResult == "Hits":
             ComDraw(playerAttackResult, mobAttackResult)
-
+#------------------------------------------------------------------------------- 
 def ComWin(playerAttackResult, mobAttackResult):
     #Combat win scenario: Player deals damage, Enemy does not
     global MobCurrentHP, playerDMG, playerCritDMG
@@ -314,7 +430,7 @@ def ComWin(playerAttackResult, mobAttackResult):
     else:
         MobCurrentHP = MobCurrentHP - (playerDMG)
     return MobCurrentHP
-
+#------------------------------------------------------------------------------- 
 def ComLose(playerAttackResult, mobAttackResult):
     #Combat Lose scenario: Enemy deals damage, Player does not
     global playerHP, mobDMG, mobCritDMG
@@ -324,7 +440,7 @@ def ComLose(playerAttackResult, mobAttackResult):
     else:
         playerHP = playerHP - mobDMG
     return playerHP
-
+#------------------------------------------------------------------------------- 
 def ComDraw(playerAttackResult, mobAttackResult):
     #Combat Draw scenario: Both parties deal damage
     global MobCurrentHP, mobDMG, playerDMG, playerHP, playerCritDMG, mobCritDMG
@@ -341,12 +457,11 @@ def ComDraw(playerAttackResult, mobAttackResult):
     else:
         playerHP = playerHP - mobDMG
     return MobCurrentHP, playerHP
-
-#-------------------------------------------------------------------------------
-  #Room Functions:
+#===============================================================================
+#Room Functions:
   #Each room handles the display of text for that room, as well as the stats of any enemy you encounter
   #and any items or equipment to be found there
-    
+#-------------------------------------------------------------------------------     
 def room1():
     #Entrance
     global currentLocation
@@ -371,7 +486,7 @@ def room1():
         room4()
     elif move == 3:
         room2()
-
+#------------------------------------------------------------------------------- 
 def room2():
     #Armoury
     #Contains the Pistol
@@ -432,9 +547,7 @@ def room2():
             print ("room1()")
         else:
             print("room6()")
-
-
-
+#------------------------------------------------------------------------------- 
 def room3():
     #Equipment Bay
     #Contains the Breach Spawn encounter
@@ -471,143 +584,54 @@ def room3():
         print("You retreat...")
         print("")
         room1()
-
-
+#------------------------------------------------------------------------------- 
 #def room4():
     #Medbay
     #Contains a First Aid kit
 
+#------------------------------------------------------------------------------- 
 #def room5():
     #Equipment Storage
     #Contains the Shotgun
     #Contains the Blue Key
 
+#------------------------------------------------------------------------------- 
 #def room6():
     #Checkpoint
     #Contains the Sub-Machinegun
     #Drone Walker
 
+#------------------------------------------------------------------------------- 
 #def room7():
+    #Weapons Control Bay
+    #Contains the Drone Processor encounter
+    #Contains the Assault Rifle
+    #Contains the Red Key
 
+#------------------------------------------------------------------------------- 
 #def room8():
+    #Locker Room
+    #Contains the Armoured Suit
 
+#------------------------------------------------------------------------------- 
 #def room9():
+    #Habitat Access
+    #Contains the Drone Mother encounter
+    #Contains a Health Kit
 
+#------------------------------------------------------------------------------- 
 #def room10():
+    #Engineering Bay
+    #Contains the Breach Lord encounter
 
+#------------------------------------------------------------------------------- 
 #def room11():
+    #The Bridge
+    #GAME END
 
-#-------------------------------------------------------------------------------
-
-def healthkit():
-    global playerHP, playerMaxHP, heal, gainhealth
-    if heal > 0:
-        print ("1. Yes")
-        print ("2. No")
-        print (playerHP)
-        gainhealth = 2
-        gainhealth = validateNum(gainhealth,1,2)
-        print(gainhealth)
-        if gainhealth == 1:
-            playerHP = playerMaxHP
-            print("You have healed yourself")
-            print (playerHP)
-            heal = heal - 1
-        elif gainhealth == 2:
-            print("No health kit was used")
-
-
-def Options():
-    while True:
-        print ("What do you want to do?")
-        print ("")
-        print ("1. Move")
-        print ("2. Heal")
-        print ("3. Save Game")
-        print ("")
-        Option = 0
-        Option = validateNum(Option,1,3)
-        if Option == 1:
-            return
-        elif Option == 2:
-            healthkit()
-        elif Option == 3:
-            SaveGame(playerHP,playerMaxHP,playerDMG,playerCrit,playerCritDMG,playerAccuracy,heal,enter1,enter2,enter3,enter4,enter5,enter6,enter7,enter8,enter9,enter10,enter11,currentLocation)
-            print ("Game Saved")
-
-
-
-def SaveGame(playerHP,playerMaxHP,playerDMG,playerCrit,playerCritDMG,playerAccuracy,heal,enter1,enter2,enter3,enter4,enter5,enter6,enter7,enter8,enter9,enter10,enter11,currentLocation):
-    file = open("BreachSaved.txt", "w")
-    file.write(str(playerHP))
-    file.write(" ")
-    file.write(str(playerMaxHP))
-    file.write(str(" "))
-    file.write(str(playerDMG))
-    file.write(str(" "))
-    file.write(str(playerCrit))
-    file.write(str(" "))
-    file.write(str(playerCritDMG))
-    file.write(str(" "))
-    file.write(str(playerAccuracy))
-    file.write(str(" "))
-    file.write(str(heal))
-    file.write(str(" "))
-    file.write(str(enter1))
-    file.write(str(" "))
-    file.write(str(enter2))
-    file.write(str(" "))
-    file.write(str(enter3))
-    file.write(str(" "))
-    file.write(str(enter4))
-    file.write(str(" "))
-    file.write(str(enter5))
-    file.write(str(" "))
-    file.write(str(enter6))
-    file.write(str(" "))
-    file.write(str(enter7))
-    file.write(str(" "))
-    file.write(str(enter8))
-    file.write(str(" "))
-    file.write(str(enter9))
-    file.write(str(" "))
-    file.write(str(enter10))
-    file.write(str(" "))
-    file.write(str(enter11))
-    file.write(str(" "))
-    file.write(str(currentLocation))
-    file.write("\n")
-    file.close()
-
-
-
-def Location(currentLocation):
-    if currentLocation == 1:
-        room1()
-    elif currentLocation == 2:
-        room2()
-    elif currentLocation == 3:
-        room3()
-    elif currentLocation == 4:
-        room4()
-    elif currentLocation == 5:
-        room5()
-    elif currentLocation == 6:
-        room6()
-    elif currentLocation == 7:
-        room7()
-    elif currentLocation == 8:
-        room8
-    elif currentLocation == 9:
-        room9()
-    elif currentLocation == 10:
-        room10()
-    elif currentLocation == 11:
-        room11()
-
-
-
-
+#===============================================================================
+#MAIN CODE
+#===============================================================================
 Start()
 #intro()
 #healthkit()
@@ -615,3 +639,6 @@ Start()
 #room1()
 #room2()
 #room3()
+
+#===============================================================================
+#PROGRAM END
