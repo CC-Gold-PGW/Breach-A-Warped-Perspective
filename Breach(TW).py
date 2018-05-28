@@ -21,8 +21,8 @@ import os
 playerMaxHP = 100
 playerHP = 100
 playerDMG = 10
-playerAccuracy = 9
-playerCrit = 20
+playerAccuracy = 10
+playerCrit = 19
 playerCritDMG = 1.5
 #Enemy global values like player values should be updated by the room functions as needed
 #Should also become an object later
@@ -33,7 +33,7 @@ mobCrit = 19
 mobCritDMG = 1.5
 MobMaxHP = 100
 #Tracks the number of healing kits carried
-heal = 0
+heal = 100
 #Tracks if a healthkit was actually used in combat to see if a turn needs to be skipped
 HealthKitUsed = False
 #Holds the monsters 2 attack preferences
@@ -702,8 +702,29 @@ def room3():
                     room1()
 
             else:
-                print("GAME OVER")
                 print("")
+                print("You step further into the room, and door slides shut behind you.  Immediately panicking you bolt back towards the door but with a sinking feeling you realise the light has grown dark.  You are trapped in the dark.")
+                print("")
+                os.system("pause")
+                print("You quickly fumble to turn your suit lights to full, and turn to see the gaping maw of a creature you could only describe in your last moments as a demon.")
+                print("")
+                os.system("pause")
+                print("")
+                print("With no weapon you are easily overpowered and brought inside the creatures jaws which come down with a deep crunch you feel through your whole body the instant before everything goes black.")
+                print("")
+                os.system("pause")
+                print("")
+                print("And you were never heard from again...")
+                print("")
+                print ("""████████╗██╗  ██╗███████╗    ███████╗███╗   ██╗██████╗
+╚══██╔══╝██║  ██║██╔════╝    ██╔════╝████╗  ██║██╔══██╗
+   ██║   ███████║█████╗      █████╗  ██╔██╗ ██║██║  ██║
+   ██║   ██╔══██║██╔══╝      ██╔══╝  ██║╚██╗██║██║  ██║
+   ██║   ██║  ██║███████╗    ███████╗██║ ╚████║██████╔╝
+   ╚═╝   ╚═╝  ╚═╝╚══════╝    ╚══════╝╚═╝  ╚═══╝╚═════╝""")
+                print("")
+                os.system("pause")
+                Start()
         elif choice == 2:
             print("You retreat...")
             print("")
