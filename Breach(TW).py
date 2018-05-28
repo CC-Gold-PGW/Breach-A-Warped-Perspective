@@ -635,50 +635,115 @@ def room3():
 
     os.system("cls")
 
-    print("As the door slides open, it reveals a pitch black room.  There is a sound of something whirring and crackling")
-    print("seemingly emanating from the back of the room, but you cannot identify the source as what little of the room")
-    print("appears to be strewn with debris and machinery and obscures your view.")
-    print("")
-    os.system("pause")
-    print("")
-    print("Then you become of the sound of dripping water, then a grunting sound so soft you almost mistook it for your own")
-    print("breath.  The hairs on the back of your neck raise and you feel a sense of incredible dread.")
-    print("")
-    os.system("pause")
-    print("")
-    print("The light at your back reminds you a few step backwards, and the door would slide shut and return you to safety")
-    print("However if you are to find a way out of this place, you will have to search every corner of this place.")
-    print("")
-    os.system("pause")
-    print("")
-    print("Should you swallow your fear and advance, or retreat for now? ")
-    print("")
-
-    print("1. Advance")
-    print("2. Retreat")
-
-    MobCurrentHP = 75
-    MobMaxHP = 75
-    mobAccuracy = 10
-    mobCrit = 19
-    mobDMG = 40
-    AttackPreference1 = 2
-    AttackPreference2 = 2
-
-
-    choice = 0
-    choice = validateNum(choice,1,2)
-
-    if choice == 1:
-        if playerDMG > 10:
-            Combat()
-        else:
-            print("GAME OVER")
-            print("")
-    elif choice == 2:
-        print("You retreat...")
+    if enter3 == 0:
+        print("As the door slides open, it reveals a pitch black room.  There is a sound of something whirring and crackling")
+        print("seemingly emanating from the back of the room, but you cannot identify the source as what little of the room")
+        print("appears to be strewn with debris and machinery and obscures your view.")
         print("")
-        room1()
+        os.system("pause")
+        print("")
+        print("Then you become of the sound of dripping water, then a grunting sound so soft you almost mistook it for your own")
+        print("breath.  The hairs on the back of your neck raise and you feel a sense of incredible dread.")
+        print("")
+        os.system("pause")
+        print("")
+        print("The light at your back reminds you a few step backwards, and the door would slide shut and return you to safety")
+        print("However if you are to find a way out of this place, you will have to search every corner of this place.")
+        print("")
+        os.system("pause")
+        print("")
+        print("Should you swallow your fear and advance, or retreat for now? ")
+        print("")
+
+        print("1. Advance")
+        print("2. Retreat")
+
+        MobCurrentHP = 75
+        MobMaxHP = 75
+        mobAccuracy = 10
+        mobCrit = 19
+        mobDMG = 40
+        AttackPreference1 = 2
+        AttackPreference2 = 2
+
+
+        choice = 0
+        choice = validateNum(choice,1,2)
+
+        if choice == 1:
+            if playerDMG > 10:
+                Combat()
+                print ("")
+                print ("With one last satisfying crunch your weapon blows the creature’s head, fangs and all, clean off its shoulders.")
+                print ("It collapses to the ground, and fails around violently for a few seconds, spraying black fluid from its neck.")
+                print ("Some of the fluid lands on you before you can back off and you hasten to wipe it off, only to find it has evaporated into a fine black mist.")
+                print ("You are immediately grateful for the suit’s generous internal supply of oxygen, as you know instinctively that whatever gas this creature emits is extremely lethal.")
+                print ("")
+                os.system("pause")
+                print ("")
+                print ("Looking back towards the creature you find only a quickly melting lump of black flesh, which soon too is no more.")
+                print ("As the last of the creature disappears, green light washes over you as the two doors that lead from this room become active again.")
+                print ("")
+                os.system("pause")
+                print ("")
+                print ("What do you do?")
+                print ("")
+                Options()
+                print("")
+
+                print ("1. There is a Green Door to the South")
+                print ("2. There is a Green Door to the East")
+
+                move = 0
+                move = validateNum(move,1,2)
+                if move == 1:
+                    room5()
+                elif move == 2:
+                    room1()
+
+            else:
+                print("GAME OVER")
+                print("")
+        elif choice == 2:
+            print("You retreat...")
+            print("")
+            room1()
+
+
+
+    elif enter3 == 1:
+        print ("")
+        print ("You return to the dark room where you had the encounter with the monster.")
+        print ("The feeling of unease you had the first time you entered has not left you.")
+        print ("")
+        print ("The door slides shut behind you plunging you into a green tinted darkness, startling you.")
+        print ("In the silence that ensures the faint sound of whirring at the back of the room, and of liquid dripping, echos inside your brain.")
+        print ("")
+        print ("You resolve not to spend a second longer in this room than you have to as you switch your suit lights back on and consider the two available doors.")
+        print ("")
+        os.system("pause")
+        print ("")
+        print ("What do you do?")
+        print ("")
+        Options()
+
+        print ("1. There is a Green Door to the South")
+        print ("2. There is a Green Door to the East")
+
+        move = 0
+                move = validateNum(move,1,2)
+                if move == 1:
+                    room5()
+                elif move == 2:
+                    room1()
+
+            else:
+                print("GAME OVER")
+                print("")
+        elif choice == 2:
+            print("You retreat...")
+            print("")
+            room1()
 #-------------------------------------------------------------------------------
 def room4():
     #Medbay
