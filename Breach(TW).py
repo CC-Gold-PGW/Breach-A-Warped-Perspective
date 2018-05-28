@@ -21,8 +21,8 @@ import os
 playerMaxHP = 100
 playerHP = 100
 playerDMG = 10
-playerAccuracy = 10
-playerCrit = 19
+playerAccuracy = 9
+playerCrit = 20
 playerCritDMG = 1.5
 #Enemy global values like player values should be updated by the room functions as needed
 #Should also become an object later
@@ -33,7 +33,7 @@ mobCrit = 19
 mobCritDMG = 1.5
 MobMaxHP = 100
 #Tracks the number of healing kits carried
-heal = 100
+heal = 0
 #Tracks if a healthkit was actually used in combat to see if a turn needs to be skipped
 HealthKitUsed = False
 #Holds the monsters 2 attack preferences
