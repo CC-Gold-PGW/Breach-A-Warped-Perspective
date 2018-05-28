@@ -21,17 +21,17 @@ import os
 playerMaxHP = 100
 playerHP = 100
 playerDMG = 10
-playerAccuracy = 1
-playerCrit = 21
+playerAccuracy = 10
+playerCrit = 19
 playerCritDMG = 1.5
 #Enemy global values like player values should be updated by the room functions as needed
 #Should also become an object later
-MobCurrentHP = 1000
-mobDMG = 1
-mobAccuracy = 1
-mobCrit = 21
+MobCurrentHP = 100
+mobDMG = 10
+mobAccuracy = 10
+mobCrit = 19
 mobCritDMG = 1.5
-MobMaxHP = 1000
+MobMaxHP = 100
 #Tracks the number of healing kits carried
 heal = 100
 #Tracks if a healthkit was actually used in combat to see if a turn needs to be skipped
@@ -85,32 +85,40 @@ def intro():
     print ("It's been 2 hours since you were seperated from your team.  The cave you stand in is cold and dank, musty air fills your lungs.")
     print ("")
     os.system("pause")
+    print ("")
     print ("You avoided the rockfall unscathed, but were unable to find anyone else who had, and lack the tools to dig through the rubble behind you.")
     print ("If there were any survivors you could not help them and with no where else you could go you headed deeper into the cave.")
     print ("")
     os.system("pause")
+    print ("")
     print ("You are aware of how long it has been thanks to your suit’s internal clock,")
     print ("and you have enough rations to survive a week underground, but without an exit plan you will surely die here.")
     print ("")
     os.system("pause")
+    print ("")
     print ("The cave you are walking through continues on in a straight line without deviation and with no other visible paths.  It is wide and curved with remarkable smoothness.")
     print ("You are unsure if this used to be an underground river, or was created artificially.")
     print ("")
     os.system("pause")
+    print ("")
     print ("This question is answered soon enough as you round the corner by artificial green light and what is quite clearly a very artificial door.")
     print ("")
     os.system("pause")
+    print ("")
     print ("As you approach the door, it slides open soundlessly, revealing a dark complex of metal corridors, burnt into your retinas as bright lights burst into life above you.")
     print ("The metal is a glossy dark material and is covered in irregular patterns and you are unsure if they are just a decorative texture or symbols with meaning.")
     print ("")
     os.system("pause")
+    print ("")
     print ("You have nowhere else you could go.  You step through the door and it shuts behind you with a soft hissing sound and the green light disappears.")
     print ("This door will not open again.")
     print ("")
     os.system("pause")
+    print ("")
     print ("Three more doors to the West, South and East of you activate and begin to cast a viridian glow.")
     print ("")
     os.system("pause")
+    print ("")
     print ("What do you do?")
     print ("")
     #Load the first room to begin the game
@@ -295,20 +303,25 @@ def EnemyAttackWeighting(Preference1,Preference2):
     if MobCurrentHP <= (MobMaxHP/2):
         WeightingList = [1,2,3,Preference2,Preference2,Preference2]
         AttackChoice = random.choice(WeightingList)
-        print(AttackChoice)
-        return AttackChoice
     else:
         WeightingList = [1,2,3,Preference1,Preference1,Preference1]
         AttackChoice = random.choice(WeightingList)
-        print(AttackChoice)
-        return AttackChoice
+
+    if AttackChoice == 1:
+        print("The enemy focuses on defending itself...")
+    elif AttackChoice == 2:
+        print("The enemy gears up for an all out assault...")
+    else:
+        print("The enemy prepares for a counter attack...")
+
+    return AttackChoice
 #-------------------------------------------------------------------------------
 def PlayerAccuracyCheck(AttackResult):
   #Function for handling the player's accuracy roll and determining the result of their attack
   global playerCrit, playerAccuracy
   Roll = 0
   Roll = random.randint(1,20)
-  print ("You attack!  You rolled a",Roll)
+  print ("You rolled a",Roll,"!")
 
   if Roll >= playerCrit:
       AttackResult = "Crits"
@@ -317,7 +330,6 @@ def PlayerAccuracyCheck(AttackResult):
   else:
       AttackResult = "Misses"
   time.sleep(0.5)
-  print(AttackResult)
   return AttackResult
 #-------------------------------------------------------------------------------
 def MobAccuracyCheck(AttackResult):
@@ -325,7 +337,7 @@ def MobAccuracyCheck(AttackResult):
   global mobCrit, mobAccuracy
   Roll = 0
   Roll = random.randint(1,20)
-  print ("The enemy attacks!  They rolled a",Roll)
+  print ("The enemy rolls a",Roll,"!")
 
   if Roll >= mobCrit:
       AttackResult = "Crits"
@@ -334,7 +346,6 @@ def MobAccuracyCheck(AttackResult):
   else:
       AttackResult = "Misses"
   time.sleep(0.5)
-  print(AttackResult
   return AttackResult
 #-------------------------------------------------------------------------------
 def Combat():
@@ -356,6 +367,7 @@ def Combat():
 
         elif MobCurrentHP <= 0:
             print("WIN")
+            os.system("pause")
             return
 
         else:
@@ -373,15 +385,26 @@ def Combat():
                 print ("")
                 #Using validator function for all player choices
                 fight = validateNum(fight,1,4)
+                os.system("cls")
                 if fight == 4:
                     HealthKitUsed = healthkit(HealthKitUsed)
                     if HealthKitUsed == True:
                         break
                     else:
                         continue
-                else:
+                if fight == 1:
+                    print("You attack carefully, ready to defend yourself...")
                     HealthKitUsed = False
                     break
+                elif fight == 2:
+                    print("You prepare for an all out assault...")
+                    HealthKitUsed = False
+                    break
+                elif fight == 3:
+                    print("You ready yourself for a counter attack...")
+                    HealthKitUsed = False
+                    break
+
 
             #Player loses their opportunity to attack if a Health Kit was used
             if HealthKitUsed == False:
@@ -392,93 +415,48 @@ def Combat():
             mobAttack = EnemyAttackWeighting(AttackPreference1, AttackPreference2)
             mobAttackResult = MobAccuracyCheck(mobAttackResult)
 
-        #Iterate through all possible scenarios:
-        #If both parties Hit combat is resolved by their attack choice
-        #If one hits and the other misses the one that hits wins that combat and deals damage
-        #Critical Hits are handled the same way as Hits but grant a bonus multiplier to damage dealt
-        if playerAttackResult == "Hits" and mobAttackResult == "Hits":
-            if fight == 1 and mobAttack == 1:
-                ComDraw(playerAttackResult, mobAttackResult)
-
-            elif fight == 1 and mobAttack == 2:
-                ComLose(playerAttackResult, mobAttackResult, HealthKitUsed)
-
-            elif fight == 1 and mobAttack == 3:
-                ComWin(playerAttackResult, mobAttackResult)
-
-            elif fight ==2 and mobAttack == 1:
-                ComWin(playerAttackResult, mobAttackResult)
-
-            elif fight ==2 and mobAttack == 2:
-                ComDraw(playerAttackResult, mobAttackResult)
-
-            elif fight ==2 and mobAttack == 3:
-                ComLose(playerAttackResult, mobAttackResult, HealthKitUsed)
-
-            elif fight ==3 and mobAttack == 1:
-                ComLose(playerAttackResult, mobAttackResult, HealthKitUsed)
-
-            elif fight == 3 and mobAttack == 2:
-                ComWin(playerAttackResult, mobAttackResult)
-
-            elif fight == 3 and mobAttack == 3:
-                ComDraw(playerAttackResult, mobAttackResult)
-
-        elif playerAttackResult == "Crits" and mobAttackResult == "Crits":
-
-            if fight == 1 and mobAttack == 1:
-                ComDraw(playerAttackResult, mobAttackResult)
-
-            elif fight == 1 and mobAttack == 2:
-                ComLose(playerAttackResult, mobAttackResult, HealthKitUsed)
-
-            elif fight == 1 and mobAttack == 3:
-                ComWin(playerAttackResult, mobAttackResult)
-
-            elif fight ==2 and mobAttack == 1:
-                ComWin(playerAttackResult, mobAttackResult)
-
-            elif fight ==2 and mobAttack == 2:
-                ComDraw(playerAttackResult, mobAttackResult)
-
-            elif fight ==2 and mobAttack == 3:
-                ComLose(playerAttackResult, mobAttackResult, HealthKitUsed)
-
-            elif fight ==3 and mobAttack == 1:
-                ComLose(playerAttackResult, mobAttackResult, HealthKitUsed)
-
-            elif fight == 3 and mobAttack == 2:
-                ComWin(playerAttackResult, mobAttackResult)
-
-            elif fight == 3 and mobAttack == 3:
-                ComDraw(playerAttackResult, mobAttackResult)
-
-        elif playerAttackResult == "Misses" and mobAttackResult == "Misses":
-            if HealthKitUsed == True:
-                print("You are too busy using the Health Kit to fight back!")
-                print("...Fortunantly the enemy missed their attack!")
+            #Iterate through all possible scenarios:
+            #If both parties Hit combat is resolved by their attack choice
+            #If one hits and the other misses the one that hits wins that combat and deals damage
+            #Critical Hits are handled the same way as Hits but grant a bonus multiplier to damage dealt
+            ChoiceOutcome = ""
+            RollComparisonOutcome = ""
+            #Rock Paper Scissors Test
+            #1 Defensive beats 3 Opportunistic
+            #2 Offensive beats 1 Defensive
+            #3 Opportunistic beats 2 Offensive
+            if (fight,mobAttack) in ((1,2),(2,3),(3,1)) or HealthKitUsed == True:
+                ChoiceOutcome = "Lose"
+            elif (fight,mobAttack) in ((1,3),(2,1),(3,2)):
+                ChoiceOutcome = "Win"
             else:
-                print ("Your attack misses the target!")
-                print ("...The enemy also misses their counter attack!")
-            continue
+                ChoiceOutcome = "Draw"
 
-        elif playerAttackResult == "Hits" and mobAttackResult == "Misses":
-            ComWin(playerAttackResult, mobAttackResult)
+            #Roll Comparison
+            if (playerAttackResult,mobAttackResult) in (("Crits","Misses"),("Hits","Misses")):
+                RollComparisonOutcome = "Win"
+            elif (playerAttackResult,mobAttackResult) in (("Misses","Crits"),("Misses","Hits")):
+                RollComparisonOutcome = "Lose"
+            elif (playerAttackResult,mobAttackResult) in ("Misses","Misses"):
+                RollComparisonOutcome = "Miss"
+            else:
+                RollComparisonOutcome = "Draw"
 
-        elif playerAttackResult == "Hits" and mobAttackResult == "Crits":
-            ComDraw(playerAttackResult, mobAttackResult)
-
-        elif playerAttackResult == "Misses" and mobAttackResult == "Hits":
-            ComLose(playerAttackResult, mobAttackResult, HealthKitUsed)
-
-        elif playerAttackResult == "Misses" and mobAttackResult == "Crits":
-            ComLose(playerAttackResult, mobAttackResult, HealthKitUsed)
-
-        elif playerAttackResult =="Crits" and mobAttackResult == "Misses":
-            ComDraw(playerAttackResult, mobAttackResult)
-
-        elif playerAttackResult == "Crits" and mobAttackResult == "Hits":
-            ComDraw(playerAttackResult, mobAttackResult)
+            #Outcome Test
+            if RollComparisonOutcome == "Miss":
+                if HealthKitUsed == True:
+                    print("You are too busy using the Health Kit to fight back!")
+                    print("...Fortunantly the enemy missed their attack!")
+                else:
+                    print ("Your attack misses the target!")
+                    print ("...The enemy also misses their counter attack!")
+                continue
+            elif (ChoiceOutcome,RollComparisonOutcome) in (("Win","Win"),("Win","Draw"),("Draw","Win")):
+                ComWin(playerAttackResult, mobAttackResult)
+            elif (ChoiceOutcome,RollComparisonOutcome) in (("Lose","Lose"),("Lose","Draw"),("Draw","Lose")):
+                ComLose(playerAttackResult, mobAttackResult, HealthKitUsed)
+            else:
+                ComDraw(playerAttackResult, mobAttackResult)
 #-------------------------------------------------------------------------------
 def ComWin(playerAttackResult, mobAttackResult):
     #Combat win scenario: Player deals damage, Enemy does not
@@ -875,6 +853,7 @@ def room6():
     os.system("cls")
 
     MobCurrentHP = 25
+    MobMaxHP = 25
     mobDMG = 36
     mobAccuracy = 9
     mobCritDMG = 1.45
@@ -1678,6 +1657,8 @@ def room11():
    ╚═╝   ╚═╝  ╚═╝╚══════╝    ╚══════╝╚═╝  ╚═══╝╚═════╝""")
 
     os.system("pause")
+    os.system("cls")
+    Start()
     #The Bridge
     #GAME END
 
