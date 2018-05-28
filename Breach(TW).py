@@ -711,31 +711,31 @@ def room3():
 
 
 
-    elif enter3 == 1:
-        print ("")
-        print ("You return to the dark room where you had the encounter with the monster.")
-        print ("The feeling of unease you had the first time you entered has not left you.")
-        print ("")
-        print ("The door slides shut behind you plunging you into a green tinted darkness, startling you.")
-        print ("In the silence that ensures the faint sound of whirring at the back of the room, and of liquid dripping, echos inside your brain.")
-        print ("")
-        print ("You resolve not to spend a second longer in this room than you have to as you switch your suit lights back on and consider the two available doors.")
-        print ("")
-        os.system("pause")
-        print ("")
-        print ("What do you do?")
-        print ("")
-        Options()
+        elif enter3 == 1:
+            print ("")
+            print ("You return to the dark room where you had the encounter with the monster.")
+            print ("The feeling of unease you had the first time you entered has not left you.")
+            print ("")
+            print ("The door slides shut behind you plunging you into a green tinted darkness, startling you.")
+            print ("In the silence that ensures the faint sound of whirring at the back of the room, and of liquid dripping, echos inside your brain.")
+            print ("")
+            print ("You resolve not to spend a second longer in this room than you have to as you switch your suit lights back on and consider the two available doors.")
+            print ("")
+            os.system("pause")
+            print ("")
+            print ("What do you do?")
+            print ("")
+            Options()
 
-        print ("1. There is a Green Door to the South")
-        print ("2. There is a Green Door to the East")
+            print ("1. There is a Green Door to the South")
+            print ("2. There is a Green Door to the East")
 
-        move = 0
-                move = validateNum(move,1,2)
-                if move == 1:
-                    room5()
-                elif move == 2:
-                    room1()
+            move = 0
+            move = validateNum(move,1,2)
+            if move == 1:
+                room5()
+            elif move == 2:
+                room1()
 
             else:
                 print("GAME OVER")
@@ -928,7 +928,7 @@ def room6():
 
     if enter6 == 0:
         print ("The door slides open smoothly and you are immediately greeted with a hail of weapon’s fire.")
-        print ("A clearly robotic humanoid figure holding a submachine gun has it trained on you and is firing a steady stream of bullets you only ")
+        print ("A clearly robotic humanoid figure holding a submachine gun has it trained on you and is firing a steady stream of bullets at you")
         print ("")
         os.system("pause")
         print("")
@@ -943,76 +943,52 @@ def room6():
             print ("Without a ranged weapon of your own there is no way to get close without being shot.")
             print ("If you want to explore this room you are going to need to find a gun of your own and deal with that robot somehow.")
             print("")
-            room6()
+            os.system("pause")
+            room4()
         else:
             print ("You decide it’s time for a firefight.  You draw your weapon and lean round the door frame, ready to fire.")
             print ("")
             Combat()
-
-        print ("Finally, you land a clean hit on the robot’s head and its return fire ends abruptly.")
-        print ("Shortly after you hear the sound of metal crashing into metal as the robot disappears from view.")
-        print ("Carefully you advance into the room, and lean over the boxes the robot was using as cover.")
-        print ("")
-        os.system("pause")
-        print("")
-        print ("You confirm the robot is indeed “dead,” but sink a few more rounds into it just to be sure, and only then do you relax enough to examine the rest of the room.")
-        print ("")
-
-        if playerDMG < 45:
-            print ("But not before you grab the robot’s gun, discovering it to be a Submachine Gun of a curious shape.")
-            print ("It beeps and automatically folds out into a more conventional form which sits snugly between your arms and shoulder when you aim it.")
+            print ("Finally, you land a clean hit on the robot’s head and its return fire ends abruptly.")
+            print ("Shortly after you hear the sound of metal crashing into metal as the robot disappears from view.")
+            print ("Carefully you advance into the room, and lean over the boxes the robot was using as cover.")
             print ("")
             os.system("pause")
             print("")
-            print ("A holographic sight pops out as you do, bathing the world through its lens in a high contrast yellow.")
-            print ("Satisfied you lower your new gun and resume examining the room.")
+            print ("You confirm the robot is indeed “dead,” but sink a few more rounds into it just to be sure, and only then do you relax enough to examine the rest of the room.")
+            print ("")
+
+            if playerDMG < 45:
+                print ("But not before you grab the robot’s gun, discovering it to be a Submachine Gun of a curious shape.")
+                print ("It beeps and automatically folds out into a more conventional form which sits snugly between your arms and shoulder when you aim it.")
+                print ("")
+                os.system("pause")
+                print("")
+                print ("A holographic sight pops out as you do, bathing the world through its lens in a high contrast yellow.")
+                print ("Satisfied you lower your new gun and resume examining the room.")
+                print ("")
+                os.system("pause")
+                print("")
+                playerDMG = 45
+                playerAccuracy = 7
+                playerCrit = 19
+
+            print ("This room appears to be some sort of reception area or checkpoint.")
+            print ("A pile of what you had assumed to be boxes but now appear to be some sort of deployable cover")
+            print ("form a defensive position in the centre of the room which it’s only inhabitant was using only moments before.")
             print ("")
             os.system("pause")
             print("")
-        playerDMG = 45
-        playerAccuracy = 7
-        playerCrit = 19
-
-        print (playerDMG)
-
-        print ("This room appears to be some sort of reception area or checkpoint.")
-        print ("A pile of what you had assumed to be boxes but now appear to be some sort of deployable cover")
-        print ("form a defensive position in the centre of the room which it’s only inhabitant was using only moments before.")
-        print ("")
-        os.system("pause")
-        print("")
-        print ("Behind another more permanent looking position at the back of the room lies a large door")
-        print ("which glows a deep blue at odds with the other green doors you have encountered so far.")
-        print ("")
-        os.system("pause")
-        print("")
-        print ("The rest of the room is starkly empty, but telltale marks and trails on the floor")
-        print ("suggest whatever had been in this room has since been moved elsewhere, or taken.")
-        print ("")
-        os.system("pause")
-        print("")
-
-        Options()
-        print("")
-
-        print ("1. There is a Green door to the West")
-        print ("2. There is a Green door to the East")
-        print ("3. There is a Blue door to the South")
-        print ("")
-        print ("What do you do?")
-
-        enter6 = 1
-
-        move = 0
-        move = validateNum(move,1,3)
-
-        if move == 1:
-            room4()
-        elif move == 2:
-            room2()
-        elif move == 3:
-            room8()
-
+            print ("Behind another more permanent looking position at the back of the room lies a large door")
+            print ("which glows a deep blue at odds with the other green doors you have encountered so far.")
+            print ("")
+            os.system("pause")
+            print("")
+            print ("The rest of the room is starkly empty, but telltale marks and trails on the floor")
+            print ("suggest whatever had been in this room has since been moved elsewhere, or taken.")
+            print ("")
+            os.system("pause")
+            print("")
 
     else:
         print ("You return to the empty checkpoint.  The large room is eerily silent, broken only by the tapping of your boots on the metal floor.")
@@ -1022,6 +998,7 @@ def room6():
         os.system("pause")
         print("")
 
+    enter6 = 1
     Options()
     print("")
 
@@ -1031,7 +1008,7 @@ def room6():
     print ("")
     print ("What do you do?")
 
-    enter6 = 1
+
 
     move = 0
     move = validateNum(move,1,3)
@@ -1042,7 +1019,6 @@ def room6():
         room2()
     elif move == 3:
         room8()
-
 #-------------------------------------------------------------------------------
 def room7():
     global playerDMG, playerAccuracy, playerCrit
@@ -1730,10 +1706,10 @@ def room11():
 #===============================================================================
 #MAIN CODE
 #===============================================================================
-#Start()
+Start()
 #intro()
 #healthkit()
-Combat()
+#Combat()
 #room1()
 #room2()
 #room3()
